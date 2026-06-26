@@ -1,0 +1,11 @@
+{
+  "company": "ExampleCo",
+  "website": "https://example.com",
+  "purpose": "Create a sourced account brief for an initial partner screen.",
+  "scope": "Public company, product, customer, and risk signals only.",
+  "requiredSources": [
+    "official website",
+    "public docs or changelog",
+    "trusted secondary source when primary evidence is unavailable"
+  ]
+}
