@@ -47,6 +47,12 @@ bash scripts/validate.sh
 
 CI runs the same validation script on every push and pull request.
 
+## Limitations
+
+- This skill is a research workflow scaffold, not a source of verified company data by itself.
+- Treat generated findings as leads until they are checked against primary sources such as the company site, filings, or official announcements.
+- Do not use it to infer private employee, customer, financial, or credential data.
+
 ## License
 
 MIT
