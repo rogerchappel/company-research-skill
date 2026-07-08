@@ -33,8 +33,12 @@ cat fixtures/company-research-input.json
 
 ## Safety And Limitations
 
-- Use public or user-provided sources only.
-- Do not infer private facts, personal contact details, or financial claims.
+- This skill is a research workflow scaffold, not a source of verified company
+  data by itself.
+- Use public or user-provided sources only, and check generated findings against
+  primary sources such as the company site, filings, or official announcements.
+- Do not infer private employee, customer, financial, credential, or personal
+  contact data.
 - Mark stale, conflicting, or unsourced information as an open question.
 - This skill organizes research; it does not replace legal, investment, or
   compliance review.
@@ -46,12 +50,6 @@ bash scripts/validate.sh
 ```
 
 CI runs the same validation script on every push and pull request.
-
-## Limitations
-
-- This skill is a research workflow scaffold, not a source of verified company data by itself.
-- Treat generated findings as leads until they are checked against primary sources such as the company site, filings, or official announcements.
-- Do not use it to infer private employee, customer, financial, or credential data.
 
 ## License
 
