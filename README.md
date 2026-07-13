@@ -29,6 +29,7 @@ cat fixtures/company-research-input.json
 - `SKILL.md` - reusable agent instructions.
 - `fixtures/company-research-input.json` - minimal sample research brief.
 - `docs/research-brief-template.md` - output template for completed research.
+- `docs/source-policy.md` - source quality tiers and minimum evidence rules.
 - `scripts/validate.sh` - local smoke check for required release files.
 
 ## Safety And Limitations
@@ -50,6 +51,9 @@ bash scripts/validate.sh
 ```
 
 CI runs the same validation script on every push and pull request.
+
+The validation script checks required release files, fixture JSON syntax,
+source-policy presence, and the required headings in the research brief template.
 
 ## License
 
