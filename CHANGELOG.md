@@ -6,3 +6,4 @@
 - Add a fixture input, research brief template, validation script, and CI smoke.
 - Clarify README safety boundaries in one consolidated limitations section.
 - Add a source policy and validate the brief template headings used in reviews.
+- Align the brief with the source policy tiers and test its Evidence Log schema.

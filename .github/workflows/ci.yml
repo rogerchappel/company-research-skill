@@ -14,4 +14,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate skill package
-        run: bash scripts/validate.sh
+        run: bash scripts/test-validate.sh

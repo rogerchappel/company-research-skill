@@ -16,9 +16,9 @@
 
 ## Evidence Log
 
-| Claim | Source | Source type | Retrieved |
+| Claim | Source | Source tier | Retrieved |
 | --- | --- | --- | --- |
-|  |  | official / filing / secondary |  |
+|  |  | Primary / Registry / Secondary |  |
 
 ## Signals
 

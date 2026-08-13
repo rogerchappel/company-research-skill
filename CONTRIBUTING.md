@@ -7,5 +7,5 @@ used.
 Before opening a pull request, run:
 
 ```sh
-bash scripts/validate.sh
+bash scripts/test-validate.sh
 ```
