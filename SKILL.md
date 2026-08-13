@@ -20,10 +20,10 @@ Ask for missing essentials before researching:
 2. Collect public evidence for product, customers, pricing, leadership, hiring,
    funding, regulatory posture, and recent news when those categories are
    relevant to the research purpose.
-3. Prefer primary sources: company pages, filings, docs, changelogs, status
-   pages, trusted registries, and official social profiles.
-4. Use secondary sources only to corroborate or discover leads. Label them as
-   secondary in the evidence log.
+3. Classify every source using the tiers defined in `docs/source-policy.md`:
+   `Primary`, `Registry`, or `Secondary`.
+4. Prefer Primary sources. Use Registry sources for authoritative records and
+   Secondary sources only to corroborate or discover leads.
 5. Separate verified facts, dated observations, and inferences.
 6. Produce a concise brief using `docs/research-brief-template.md`.
 

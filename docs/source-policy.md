@@ -5,6 +5,9 @@ share with a reviewer.
 
 ## Source Tiers
 
+Use exactly these labels in the research brief Evidence Log: `Primary`,
+`Registry`, or `Secondary`.
+
 - Primary: company website, product docs, changelog, filings, status page,
   official marketplace listing, or official social profile.
 - Registry: government, standards body, app store, package registry, or security
