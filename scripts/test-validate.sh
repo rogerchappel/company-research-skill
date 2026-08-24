@@ -16,8 +16,15 @@ copy_package() {
 expect_failure() {
   local package=$1
   local description=$2
-  if bash "$root/scripts/validate.sh" "$package" >/dev/null 2>&1; then
+  local expected=${3:-}
+  local output
+  if output=$(bash "$root/scripts/validate.sh" "$package" 2>&1); then
     echo "expected validation failure: $description" >&2
+    exit 1
+  fi
+  if [[ -n $expected && $output != *"$expected"* ]]; then
+    echo "validation failure for $description did not include: $expected" >&2
+    echo "$output" >&2
     exit 1
   fi
 }
@@ -37,5 +44,49 @@ sed -i.bak 's/Primary \/ Registry \/ Secondary/Primary \/ Database \/ Secondary/
   "$undeclared_tier/docs/research-brief-template.md"
 rm "$undeclared_tier/docs/research-brief-template.md.bak"
 expect_failure "$undeclared_tier" "undeclared source tier"
+
+wrong_company=$tmp/wrong-company
+copy_package "$wrong_company"
+python3 - "$wrong_company/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value["company"] = 42
+open(path, "w").write(json.dumps(value))
+PY
+expect_failure "$wrong_company" "wrong-type company" "company must be a non-empty string"
+
+missing_website=$tmp/missing-website
+copy_package "$missing_website"
+python3 - "$missing_website/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value.pop("website")
+open(path, "w").write(json.dumps(value))
+PY
+expect_failure "$missing_website" "missing website or domain" "website or domain must be a non-empty string"
+
+empty_purpose=$tmp/empty-purpose
+copy_package "$empty_purpose"
+python3 - "$empty_purpose/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value["purpose"] = "  "
+open(path, "w").write(json.dumps(value))
+PY
+expect_failure "$empty_purpose" "empty purpose" "purpose must be a non-empty string"
+
+invalid_sources=$tmp/invalid-sources
+copy_package "$invalid_sources"
+python3 - "$invalid_sources/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value["requiredSources"] = []
+open(path, "w").write(json.dumps(value))
+PY
+expect_failure "$invalid_sources" "empty source list" "requiredSources must be a non-empty list"
 
 echo "company-research-skill validation tests ok"
