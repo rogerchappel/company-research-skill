@@ -9,8 +9,10 @@ reviewable company briefs without mixing facts, assumptions, and outreach copy.
 bash scripts/validate.sh
 ```
 
-Use the skill instructions in `SKILL.md` with a company name, website, and the
-research question you need answered. The fixture below is a safe starter input:
+Use the skill instructions in `SKILL.md` with a non-empty `company`, `purpose`,
+and `requiredSources` list, plus at least one of `website` or `domain`. Optional
+`scope`, `geography`, and `dateRange` values must be non-empty strings when
+supplied. The fixture below is a valid safe starter input:
 
 ```sh
 cat fixtures/company-research-input.json
@@ -53,9 +55,9 @@ bash scripts/validate.sh
 
 CI runs the same validation script on every push and pull request.
 
-The validation script enforces required release files, fixture JSON syntax, the
-Evidence Log table schema, and the exact `Primary`, `Registry`, and `Secondary`
-source-tier vocabulary declared by the source policy. Run the offline executable
+The validation script enforces required release files, the documented company
+research input contract, the Evidence Log table schema, and the exact `Primary`,
+`Registry`, and `Secondary` source-tier vocabulary declared by the source policy. Run the offline executable
 coverage, including malformed-template cases, with:
 
 ```sh
