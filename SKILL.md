@@ -7,11 +7,11 @@ account plan, partner screen, or diligence note.
 
 Ask for missing essentials before researching:
 
-- company name
-- official website or primary domain
-- research purpose
-- geography or market scope, if relevant
-- time sensitivity or required date range
+- `company`: non-empty company name (required)
+- `website` or `domain`: official website URL or primary domain (at least one required)
+- `purpose`: non-empty research purpose (required)
+- `requiredSources`: non-empty list of source categories to consult (required)
+- `scope`, `geography`, and `dateRange`: non-empty strings when supplied (optional)
 
 ## Workflow
 
