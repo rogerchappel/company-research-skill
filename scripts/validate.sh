@@ -21,6 +21,7 @@ done
 
 python3 - "$root/fixtures/company-research-input.json" <<'PY'
 import json
+import re
 import sys
 from urllib.parse import urlparse
 
@@ -46,6 +47,20 @@ if website is not None:
     parsed = urlparse(website) if isinstance(website, str) else None
     if not parsed or parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise SystemExit("invalid company research input: website must be an absolute http(s) URL")
+if domain is not None:
+    labels = domain.split(".") if isinstance(domain, str) else []
+    if (
+        not isinstance(domain, str)
+        or domain != domain.strip()
+        or len(domain) > 253
+        or len(labels) < 2
+        or any(
+            len(label) > 63
+            or not re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?", label)
+            for label in labels
+        )
+    ):
+        raise SystemExit("invalid company research input: domain must be a valid primary domain")
 
 sources = value.get("requiredSources")
 if not isinstance(sources, list) or not sources or any(
