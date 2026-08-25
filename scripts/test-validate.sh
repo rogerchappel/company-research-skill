@@ -31,6 +31,30 @@ expect_failure() {
 
 bash "$root/scripts/validate.sh" "$root"
 
+valid_domain=$tmp/valid-domain
+copy_package "$valid_domain"
+python3 - "$valid_domain/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value.pop("website")
+value["domain"] = "research.example.com"
+open(path, "w").write(json.dumps(value))
+PY
+bash "$root/scripts/validate.sh" "$valid_domain"
+
+website_only=$tmp/website-only
+copy_package "$website_only"
+python3 - "$website_only/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value.pop("domain", None)
+value["website"] = "https://www.example.com/research"
+open(path, "w").write(json.dumps(value))
+PY
+bash "$root/scripts/validate.sh" "$website_only"
+
 missing_table=$tmp/missing-table
 copy_package "$missing_table"
 sed -i.bak '/| Claim | Source | Source tier | Retrieved |/d' \
@@ -66,6 +90,20 @@ value.pop("website")
 open(path, "w").write(json.dumps(value))
 PY
 expect_failure "$missing_website" "missing website or domain" "website or domain must be a non-empty string"
+
+for invalid_domain in "not a domain" " example.com " "-example.com" "example..com"; do
+  malformed_domain=$tmp/malformed-domain-${invalid_domain//[^a-zA-Z0-9]/-}
+  copy_package "$malformed_domain"
+  python3 - "$malformed_domain/fixtures/company-research-input.json" "$invalid_domain" <<'PY'
+import json, sys
+path, domain = sys.argv[1:]
+value = json.load(open(path))
+value.pop("website")
+value["domain"] = domain
+open(path, "w").write(json.dumps(value))
+PY
+  expect_failure "$malformed_domain" "malformed domain: $invalid_domain" "domain must be a valid primary domain"
+done
 
 empty_purpose=$tmp/empty-purpose
 copy_package "$empty_purpose"
