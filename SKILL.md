@@ -8,9 +8,11 @@ account plan, partner screen, or diligence note.
 Ask for missing essentials before researching:
 
 - `company`: non-empty company name (required)
-- `website` or `domain`: absolute HTTP(S) official website URL or DNS-style
-  primary domain with at least two dot-separated labels, such as `example.com`
-  (at least one required; domains omit schemes, paths, ports, and whitespace)
+- `website` or `domain`: trimmed absolute HTTP(S) official website URL with a
+  valid hostname and port, no whitespace, and no embedded username or password;
+  or a DNS-style primary domain with at least two dot-separated labels, such as
+  `example.com` (at least one required; website paths are allowed, while domains
+  omit schemes, paths, ports, and whitespace)
 - `purpose`: non-empty research purpose (required)
 - `requiredSources`: non-empty list of source categories to consult (required)
 - `scope`, `geography`, and `dateRange`: non-empty strings when supplied (optional)
