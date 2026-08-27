@@ -12,10 +12,12 @@ bash scripts/validate.sh
 Use the skill instructions in `SKILL.md` with a non-empty `company`, `purpose`,
 and `requiredSources` list, plus at least one of `website` or `domain`. Optional
 `scope`, `geography`, and `dateRange` values must be non-empty strings when
-supplied. `website` accepts an absolute HTTP(S) URL. `domain` accepts a DNS-style
-primary domain with at least two dot-separated labels (for example,
-`example.com`), without a scheme, path, port, or surrounding whitespace. The
-fixture below is a valid safe starter input:
+supplied. `website` accepts a trimmed absolute HTTP(S) URL with a valid hostname
+and port, no whitespace, and no embedded username or password; paths, queries,
+and fragments are allowed. `domain` accepts a DNS-style primary domain with at
+least two dot-separated labels (for example, `example.com`), without a scheme,
+path, port, or surrounding whitespace. The fixture below is a valid safe starter
+input:
 
 ```sh
 cat fixtures/company-research-input.json
