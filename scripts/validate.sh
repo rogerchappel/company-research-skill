@@ -21,9 +21,10 @@ done
 
 python3 - "$root/fixtures/company-research-input.json" <<'PY'
 import json
+import ipaddress
 import re
 import sys
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 
 path = sys.argv[1]
 try:
@@ -44,8 +45,38 @@ domain = value.get("domain")
 if not any(isinstance(item, str) and item.strip() for item in (website, domain)):
     raise SystemExit("invalid company research input: website or domain must be a non-empty string")
 if website is not None:
-    parsed = urlparse(website) if isinstance(website, str) else None
-    if not parsed or parsed.scheme not in {"http", "https"} or not parsed.netloc:
+    try:
+        parsed = urlsplit(website) if isinstance(website, str) else None
+        hostname = parsed.hostname if parsed else None
+        parsed.port if parsed else None
+    except ValueError:
+        parsed = None
+        hostname = None
+    valid_hostname = False
+    if hostname:
+        try:
+            ipaddress.ip_address(hostname)
+            valid_hostname = True
+        except ValueError:
+            labels = hostname.split(".")
+            valid_hostname = (
+                len(hostname) <= 253
+                and all(
+                    len(label) <= 63
+                    and re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?", label)
+                    for label in labels
+                )
+            )
+    if (
+        not parsed
+        or website != website.strip()
+        or re.search(r"\s", website)
+        or parsed.scheme not in {"http", "https"}
+        or not parsed.netloc
+        or parsed.username is not None
+        or parsed.password is not None
+        or not valid_hostname
+    ):
         raise SystemExit("invalid company research input: website must be an absolute http(s) URL")
 if domain is not None:
     labels = domain.split(".") if isinstance(domain, str) else []
