@@ -55,6 +55,38 @@ open(path, "w").write(json.dumps(value))
 PY
 bash "$root/scripts/validate.sh" "$website_only"
 
+valid_http_website=$tmp/valid-http-website
+copy_package "$valid_http_website"
+python3 - "$valid_http_website/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value.pop("domain", None)
+value["website"] = "http://example.com:8080/company/about?view=full"
+open(path, "w").write(json.dumps(value))
+PY
+bash "$root/scripts/validate.sh" "$valid_http_website"
+
+for invalid_website in \
+  "https://example.com:bad-port" \
+  "https:// example.com" \
+  " https://example.com " \
+  "https://-example.com" \
+  "https://user:password@example.com"; do
+  malformed_website=$tmp/malformed-website-${invalid_website//[^a-zA-Z0-9]/-}
+  copy_package "$malformed_website"
+  python3 - "$malformed_website/fixtures/company-research-input.json" "$invalid_website" <<'PY'
+import json, sys
+path, website = sys.argv[1:]
+value = json.load(open(path))
+value.pop("domain", None)
+value["website"] = website
+open(path, "w").write(json.dumps(value))
+PY
+  expect_failure "$malformed_website" "malformed website: $invalid_website" \
+    "website must be an absolute http(s) URL"
+done
+
 missing_table=$tmp/missing-table
 copy_package "$missing_table"
 sed -i.bak '/| Claim | Source | Source tier | Retrieved |/d' \
