@@ -31,6 +31,11 @@ expect_failure() {
 
 bash "$root/scripts/validate.sh" "$root"
 
+workflow=$root/.github/workflows/ci.yml
+grep -Fqx 'permissions:' "$workflow"
+grep -Fqx '  contents: read' "$workflow"
+grep -Fq 'uses: actions/checkout@v5' "$workflow"
+
 valid_domain=$tmp/valid-domain
 copy_package "$valid_domain"
 python3 - "$valid_domain/fixtures/company-research-input.json" <<'PY'
