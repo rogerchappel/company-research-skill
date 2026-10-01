@@ -92,18 +92,24 @@ PY
     "website must be an absolute http(s) URL"
 done
 
+edit_file() {
+  local path=$1
+  local expression=$2
+  local edited=$path.edited
+  sed "$expression" "$path" > "$edited"
+  mv "$edited" "$path"
+}
+
 missing_table=$tmp/missing-table
 copy_package "$missing_table"
-sed -i.bak '/| Claim | Source | Source tier | Retrieved |/d' \
-  "$missing_table/docs/research-brief-template.md"
-rm "$missing_table/docs/research-brief-template.md.bak"
+edit_file "$missing_table/docs/research-brief-template.md" \
+  '/| Claim | Source | Source tier | Retrieved |/d'
 expect_failure "$missing_table" "missing Evidence Log table header"
 
 undeclared_tier=$tmp/undeclared-tier
 copy_package "$undeclared_tier"
-sed -i.bak 's/Primary \/ Registry \/ Secondary/Primary \/ Database \/ Secondary/' \
-  "$undeclared_tier/docs/research-brief-template.md"
-rm "$undeclared_tier/docs/research-brief-template.md.bak"
+edit_file "$undeclared_tier/docs/research-brief-template.md" \
+  's/Primary \/ Registry \/ Secondary/Primary \/ Database \/ Secondary/'
 expect_failure "$undeclared_tier" "undeclared source tier"
 
 wrong_company=$tmp/wrong-company
