@@ -112,6 +112,12 @@ edit_file "$undeclared_tier/docs/research-brief-template.md" \
   's/Primary \/ Registry \/ Secondary/Primary \/ Database \/ Secondary/'
 expect_failure "$undeclared_tier" "undeclared source tier"
 
+missing_evidence_row=$tmp/missing-evidence-row
+copy_package "$missing_evidence_row"
+edit_file "$missing_evidence_row/docs/research-brief-template.md" \
+  '/|  |  | Primary \/ Registry \/ Secondary |  |/d'
+expect_failure "$missing_evidence_row" "missing Evidence Log example row"
+
 wrong_company=$tmp/wrong-company
 copy_package "$wrong_company"
 python3 - "$wrong_company/fixtures/company-research-input.json" <<'PY'
