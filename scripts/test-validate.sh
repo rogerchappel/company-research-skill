@@ -31,6 +31,41 @@ expect_failure() {
 
 bash "$root/scripts/validate.sh" "$root"
 
+expect_fixture_failure() {
+  local description=$1
+  local expected=$2
+  shift 2
+  local package=$tmp/invalid-${description//[^a-zA-Z0-9]/-}
+  copy_package "$package"
+  python3 - "$package/fixtures/company-research-input.json" "$@" <<'PYCASE'
+import json, sys
+path, mode, value = sys.argv[1:]
+if mode == "raw":
+    open(path, "w", encoding="utf-8").write(value)
+else:
+    with open(path, encoding="utf-8") as handle:
+        fixture = json.load(handle)
+    if mode == "root":
+        fixture = json.loads(value)
+    elif mode == "field":
+        field, replacement = value.split("=", 1)
+        fixture[field] = json.loads(replacement)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(fixture, handle)
+PYCASE
+  expect_failure "$package" "$description" "$expected"
+}
+
+expect_fixture_failure "malformed-json" "invalid company research input:" raw '{"company":'
+expect_fixture_failure "array-root" "root must be an object" root '[]'
+expect_fixture_failure "null-root" "root must be an object" root 'null'
+expect_fixture_failure "sources-not-list" "requiredSources must be a non-empty list" field 'requiredSources="news"'
+expect_fixture_failure "relative-url" "website must be an absolute http(s) URL" field 'website="//example.com/path"'
+expect_fixture_failure "unsupported-scheme" "website must be an absolute http(s) URL" field 'website="ftp://example.com"'
+expect_fixture_failure "missing-hostname" "website must be an absolute http(s) URL" field 'website="https:///path"'
+expect_fixture_failure "unicode-domain" "domain must be a valid primary domain" field 'domain="münich.example"'
+expect_fixture_failure "trailing-dot-domain" "domain must be a valid primary domain" field 'domain="example.com."'
+
 workflow=$root/.github/workflows/ci.yml
 grep -Fqx 'permissions:' "$workflow"
 grep -Fqx '  contents: read' "$workflow"
