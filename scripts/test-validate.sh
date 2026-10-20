@@ -147,6 +147,22 @@ edit_file "$undeclared_tier/docs/research-brief-template.md" \
   's/Primary \/ Registry \/ Secondary/Primary \/ Database \/ Secondary/'
 expect_failure "$undeclared_tier" "undeclared source tier"
 
+missing_policy_tier=$tmp/missing-policy-tier
+copy_package "$missing_policy_tier"
+edit_file "$missing_policy_tier/docs/source-policy.md" \
+  's/`Registry`, or `Secondary`\./`Directory`, or `Secondary`./'
+expect_failure "$missing_policy_tier" "missing policy tier label"
+
+altered_policy_tier=$tmp/altered-policy-tier
+copy_package "$altered_policy_tier"
+edit_file "$altered_policy_tier/docs/source-policy.md" \
+  's/`Registry`, or `Secondary`\./`Directory`, or `Secondary`./'
+expect_failure "$altered_policy_tier" "altered policy tier label"
+
+valid_policy=$tmp/valid-policy
+copy_package "$valid_policy"
+bash "$root/scripts/validate.sh" "$valid_policy"
+
 missing_evidence_row=$tmp/missing-evidence-row
 copy_package "$missing_evidence_row"
 edit_file "$missing_evidence_row/docs/research-brief-template.md" \
