@@ -16,7 +16,10 @@ required_files=(
 )
 
 for path in "${required_files[@]}"; do
-  test -s "$root/$path"
+  if [[ ! -s "$root/$path" ]]; then
+    printf 'missing or empty required file: %s\n' "$path" >&2
+    exit 1
+  fi
 done
 
 python3 - "$root/fixtures/company-research-input.json" <<'PY'
