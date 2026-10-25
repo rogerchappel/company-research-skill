@@ -31,6 +31,25 @@ expect_failure() {
 
 bash "$root/scripts/validate.sh" "$root"
 
+required_files=(
+  README.md
+  SKILL.md
+  docs/research-brief-template.md
+  docs/source-policy.md
+  fixtures/company-research-input.json
+  LICENSE
+  SECURITY.md
+  CONTRIBUTING.md
+  CHANGELOG.md
+)
+for required_file in "${required_files[@]}"; do
+  missing_file=$tmp/missing-required-file
+  copy_package "$missing_file"
+  rm "$missing_file/$required_file"
+  expect_failure "$missing_file" "missing required file: $required_file" \
+    "missing or empty required file: $required_file"
+done
+
 expect_fixture_failure() {
   local description=$1
   local expected=$2
