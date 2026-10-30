@@ -6,6 +6,7 @@
 - Website:
 - Research purpose:
 - Retrieval date:
+- Snapshot as of:
 
 ## Snapshot
 

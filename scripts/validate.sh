@@ -113,6 +113,17 @@ for heading in "## Request" "## Snapshot" "## Evidence Log" "## Open Questions" 
   grep -Fqx "$heading" "$root/docs/research-brief-template.md"
 done
 
+# Snapshot timing is part of the brief contract: retrieval date anchors the
+# research, while this field states how current the snapshot is.
+grep -Fqx -- "- Retrieval date:" "$root/docs/research-brief-template.md" || {
+  echo "missing required timing field: - Retrieval date:" >&2
+  exit 1
+}
+grep -Fqx -- "- Snapshot as of:" "$root/docs/research-brief-template.md" || {
+  echo "missing required timing field: - Snapshot as of:" >&2
+  exit 1
+}
+
 template=$root/docs/research-brief-template.md
 policy=$root/docs/source-policy.md
 

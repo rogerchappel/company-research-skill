@@ -154,6 +154,16 @@ edit_file() {
   mv "$edited" "$path"
 }
 
+missing_retrieval_date=$tmp/missing-retrieval-date
+copy_package "$missing_retrieval_date"
+edit_file "$missing_retrieval_date/docs/research-brief-template.md" '/- Retrieval date:/d'
+expect_failure "$missing_retrieval_date" "missing retrieval date field" "- Retrieval date:"
+
+missing_snapshot_date=$tmp/missing-snapshot-date
+copy_package "$missing_snapshot_date"
+edit_file "$missing_snapshot_date/docs/research-brief-template.md" '/- Snapshot as of:/d'
+expect_failure "$missing_snapshot_date" "missing snapshot timing field" "- Snapshot as of:"
+
 missing_table=$tmp/missing-table
 copy_package "$missing_table"
 edit_file "$missing_table/docs/research-brief-template.md" \
