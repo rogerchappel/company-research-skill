@@ -84,6 +84,9 @@ expect_fixture_failure "unsupported-scheme" "website must be an absolute http(s)
 expect_fixture_failure "missing-hostname" "website must be an absolute http(s) URL" field 'website="https:///path"'
 expect_fixture_failure "unicode-domain" "domain must be a valid primary domain" field 'domain="münich.example"'
 expect_fixture_failure "trailing-dot-domain" "domain must be a valid primary domain" field 'domain="example.com."'
+expect_fixture_failure "empty-company" "company must be a non-empty string" field 'company="  "'
+expect_fixture_failure "empty-purpose" "purpose must be a non-empty string" field 'purpose=""'
+expect_fixture_failure "optional-scope-type" "optional scope must be a non-empty string" field 'scope=42'
 
 workflow=$root/.github/workflows/ci.yml
 grep -Fqx 'permissions:' "$workflow"
