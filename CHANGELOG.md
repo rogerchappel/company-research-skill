@@ -2,6 +2,7 @@
 
 ## 0.1.0 - Unreleased
 
+- Declare Python 3.10+ support and test the validator on minimum and current stable Python in CI.
 - Add first public company research skill instructions.
 - Add a fixture input, research brief template, validation script, and CI smoke.
 - Clarify README safety boundaries in one consolidated limitations section.
