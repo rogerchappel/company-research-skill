@@ -93,6 +93,18 @@ grep -Fqx 'permissions:' "$workflow"
 grep -Fqx '  contents: read' "$workflow"
 grep -Fq 'uses: actions/checkout@v5' "$workflow"
 
+missing_fixture=$tmp/missing-fixture
+copy_package "$missing_fixture"
+rm "$missing_fixture/fixtures/company-research-input.json"
+expect_failure "$missing_fixture" "missing fixture" \
+  "missing or empty required file: fixtures/company-research-input.json"
+
+empty_fixture=$tmp/empty-fixture
+copy_package "$empty_fixture"
+: > "$empty_fixture/fixtures/company-research-input.json"
+expect_failure "$empty_fixture" "empty fixture" \
+  "missing or empty required file: fixtures/company-research-input.json"
+
 valid_domain=$tmp/valid-domain
 copy_package "$valid_domain"
 python3 - "$valid_domain/fixtures/company-research-input.json" <<'PY'
