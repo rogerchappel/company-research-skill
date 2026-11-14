@@ -56,10 +56,11 @@ if website is not None:
         parsed = None
         hostname = None
     valid_hostname = False
+    ip_address = None
     if hostname:
         try:
-            ipaddress.ip_address(hostname)
-            valid_hostname = True
+            ip_address = ipaddress.ip_address(hostname)
+            valid_hostname = ip_address.is_global
         except ValueError:
             labels = hostname.split(".")
             valid_hostname = (
@@ -80,6 +81,8 @@ if website is not None:
         or parsed.password is not None
         or not valid_hostname
     ):
+        if ip_address is not None and not ip_address.is_global:
+            raise SystemExit("invalid company research input: website host must be a public hostname")
         raise SystemExit("invalid company research input: website must be an absolute http(s) URL")
 if domain is not None:
     labels = domain.split(".") if isinstance(domain, str) else []
