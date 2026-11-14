@@ -82,6 +82,14 @@ expect_fixture_failure "sources-not-list" "requiredSources must be a non-empty l
 expect_fixture_failure "relative-url" "website must be an absolute http(s) URL" field 'website="//example.com/path"'
 expect_fixture_failure "unsupported-scheme" "website must be an absolute http(s) URL" field 'website="ftp://example.com"'
 expect_fixture_failure "missing-hostname" "website must be an absolute http(s) URL" field 'website="https:///path"'
+for blocked_ip in "127.0.0.1" "10.0.0.8" "172.16.0.1" "192.168.1.2" "169.254.1.1" "::1" "fc00::1"; do
+  if [[ $blocked_ip == *:* ]]; then
+    ip_url="https://[$blocked_ip]/"
+  else
+    ip_url="https://$blocked_ip/"
+  fi
+  expect_fixture_failure "non-public-website-ip-$blocked_ip" "website host must be a public hostname" field "website=\"$ip_url\""
+done
 expect_fixture_failure "unicode-domain" "domain must be a valid primary domain" field 'domain="münich.example"'
 expect_fixture_failure "trailing-dot-domain" "domain must be a valid primary domain" field 'domain="example.com."'
 expect_fixture_failure "empty-company" "company must be a non-empty string" field 'company="  "'
@@ -140,6 +148,18 @@ value["website"] = "http://example.com:8080/company/about?view=full"
 open(path, "w").write(json.dumps(value))
 PY
 bash "$root/scripts/validate.sh" "$valid_http_website"
+
+valid_public_ip_website=$tmp/valid-public-ip-website
+copy_package "$valid_public_ip_website"
+python3 - "$valid_public_ip_website/fixtures/company-research-input.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value.pop("domain", None)
+value["website"] = "https://8.8.8.8/"
+open(path, "w").write(json.dumps(value))
+PY
+bash "$root/scripts/validate.sh" "$valid_public_ip_website"
 
 for invalid_website in \
   "https://example.com:bad-port" \
