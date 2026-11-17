@@ -291,4 +291,16 @@ open(path, "w").write(json.dumps(value))
 PY
 expect_failure "$invalid_sources" "empty source list" "requiredSources must be a non-empty list"
 
+blank_source_item=$tmp/blank-source-item
+copy_package "$blank_source_item"
+python3 - "$blank_source_item/fixtures/company-research-input.json" <<'PYCODE'
+import json, sys
+path = sys.argv[1]
+value = json.load(open(path))
+value["requiredSources"][0] = "  "
+open(path, "w").write(json.dumps(value))
+PYCODE
+expect_failure "$blank_source_item" "blank required source item" \
+  "requiredSources must be a non-empty list of non-empty strings"
+
 echo "company-research-skill validation tests ok"
