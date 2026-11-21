@@ -13,6 +13,7 @@ required_files=(
   SECURITY.md
   CONTRIBUTING.md
   CHANGELOG.md
+  .github/workflows/ci.yml
 )
 
 for path in "${required_files[@]}"; do
