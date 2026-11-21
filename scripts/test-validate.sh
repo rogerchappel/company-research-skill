@@ -9,6 +9,8 @@ copy_package() {
   local destination=$1
   mkdir -p "$destination"
   cp -R "$root/docs" "$root/fixtures" "$root/scripts" "$destination/"
+  mkdir -p "$destination/.github/workflows"
+  cp "$root/.github/workflows/ci.yml" "$destination/.github/workflows/ci.yml"
   cp "$root/README.md" "$root/SKILL.md" "$root/LICENSE" "$root/SECURITY.md" \
     "$root/CONTRIBUTING.md" "$root/CHANGELOG.md" "$destination/"
 }
@@ -30,6 +32,11 @@ expect_failure() {
 }
 
 bash "$root/scripts/validate.sh" "$root"
+
+missing_ci=$tmp/missing-ci
+copy_package "$missing_ci"
+rm "$missing_ci/.github/workflows/ci.yml"
+expect_failure "$missing_ci" "missing CI workflow" "missing or empty required file: .github/workflows/ci.yml"
 
 required_files=(
   README.md
