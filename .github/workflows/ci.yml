@@ -26,4 +26,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Validate skill package
-        run: bash scripts/test-validate.sh
+        run: bash scripts/validate.sh

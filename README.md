@@ -63,7 +63,7 @@ cat fixtures/company-research-input.json
 bash scripts/validate.sh
 ```
 
-CI runs `bash scripts/test-validate.sh` on every push and pull request. That offline test script includes the package and Evidence Log contract checks described below, along with positive and negative executable coverage.
+CI runs `bash scripts/validate.sh` on every push and pull request, matching the documented quickstart and Verify command. Run `bash scripts/test-validate.sh` locally for the additional offline positive and negative executable coverage.
 
 The validation script enforces required release files, the documented company
 research input contract, the Evidence Log table schema, and the exact `Primary`,
