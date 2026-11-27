@@ -6,7 +6,7 @@ reviewable company briefs without mixing facts, assumptions, and outreach copy.
 ## Requirements
 
 - Bash
-- Python 3.10 or newer (CI checks Python 3.10 and the latest stable Python 3.x)
+- Python 3.10 or newer (CI checks Python 3.10 and 3.14)
 
 ## Quickstart
 
